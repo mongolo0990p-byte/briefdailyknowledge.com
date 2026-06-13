@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MENTEABIERTA — Datos que te van a volar la cabeza</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0D0D0D;
+    --surface: #1A1A1A;
+    --card: #202020;
+    --yellow: #FFE500;
+    --red: #FF3B3B;
+    --white: #F5F5F5;
+    --muted: #888;
+    --border: #2A2A2A;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--yellow);
+    color: #000;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 16px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: #000;
+    border-bottom: 2px solid var(--yellow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 60px;
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--yellow);
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+  .logo span { color: var(--white); }
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+
+  /* ── AD BANNER ── */
+  .ad-banner {
+    background: var(--surface);
+    border: 1px dashed #333;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 auto;
+    max-width: 728px;
+    width: 100%;
+  }
+  .ad-wrapper { padding: 12px 24px; display: flex; justify-content: center; background: var(--bg); }
+  .ad-label { font-size: 10px; text-align: center; color: #444; letter-spacing: 0.1em; padding-top: 4px; text-transform: uppercase; }
+
+  /* ── COUNTER HERO ── */
+  .hero {
+    text-align: center;
+    padding: 52px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center top, rgba(255,229,0,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 8vw, 88px);
+    line-height: 0.95;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+  .hero h1 em { color: var(--yellow); font-style: normal; }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto 32px;
+  }
+  .counter-block {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--yellow);
+    padding: 14px 28px;
+    border-radius: 4px;
+  }
+  .counter-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .counter-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+  }
+  .counter-text { font-size: 13px; color: var(--muted); }
+
+  /* ── TRENDING TICKER ── */
+  .ticker {
+    background: var(--yellow);
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: scroll 30s linear infinite;
+  }
+  .ticker span {
+    display: inline-block;
+    color: #000;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 0 40px;
+    letter-spacing: 0.03em;
+  }
+  .ticker span::before { content: '★ '; }
+  @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* ── MAIN LAYOUT ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--white);
+    padding: 36px 0 20px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::before {
+    content: '';
+    width: 6px; height: 28px;
+    background: var(--yellow);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── HERO CARD (featured) ── */
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.25s;
+    border: 1px solid var(--border);
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.6); }
+
+  .card-img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Emoji placeholder images */
+  .card-img-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+    position: relative;
+  }
+  .card--featured .card-img-placeholder { font-size: 100px; }
+
+  .card-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, transparent 100%);
+    padding: 80px 20px 20px;
+  }
+  .card-tag {
+    display: inline-block;
+    background: var(--yellow);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+  }
+  .card-tag.red { background: var(--red); color: #fff; }
+  .card-tag.blue { background: #3B82F6; color: #fff; }
+  .card-tag.green { background: #22C55E; color: #fff; }
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(18px, 2vw, 24px);
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .card--featured .card-title { font-size: clamp(24px, 3vw, 36px); }
+  .card-meta { font-size: 12px; color: rgba(255,255,255,0.55); }
+  .card-number {
+    position: absolute;
+    top: 12px; left: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px;
+    color: rgba(255,229,0,0.15);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* ── STANDARD GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .cards-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  /* ── LIST CARDS (top 10) ── */
+  .list-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    margin-bottom: 8px;
+  }
+  .list-card:hover { transform: translateX(6px); border-color: var(--yellow); }
+  .list-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--yellow);
+    line-height: 1;
+    min-width: 48px;
+    text-align: center;
+    opacity: 0.9;
+  }
+  .list-content h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--white); }
+  .list-content p { font-size: 13px; color: var(--muted); }
+
+  /* ── TWO COLUMN LAYOUT ── */
+  .two-col { display: grid; grid-template-columns: 1fr 320px; gap: 32px; margin-top: 8px; }
+  .sidebar {}
+
+  /* ── SIDEBAR AD ── */
+  .ad-sidebar {
+    background: var(--surface);
+    border: 1px dashed #333;
+    width: 300px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .ad-sidebar-tall { height: 600px; }
+
+  /* ── QUIZ CARD ── */
+  .quiz-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid #3B82F6;
+    border-radius: 8px;
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.25s;
+    margin-bottom: 24px;
+  }
+  .quiz-card:hover { transform: scale(1.02); }
+  .quiz-icon { font-size: 48px; margin-bottom: 12px; }
+  .quiz-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: #60A5FA;
+    margin-bottom: 8px;
+  }
+  .quiz-card p { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+  .btn {
+    display: inline-block;
+    background: var(--yellow);
+    color: #000;
+    font-weight: 800;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: #ffd900; }
+  .btn-red { background: var(--red); color: #fff; }
+  .btn-red:hover { background: #e02020; }
+
+  /* ── SHARE BAR ── */
+  .share-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 8px 0 24px;
+    flex-wrap: wrap;
+  }
+  .share-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s;
+  }
+  .share-btn:hover { opacity: 0.85; }
+  .share-fb { background: #1877F2; color: #fff; }
+  .share-tw { background: #000; color: #fff; border: 1px solid #333; }
+  .share-wa { background: #25D366; color: #fff; }
+  .share-count { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+  /* ── FACT CARDS ── */
+  .fact-card {
+    background: var(--card);
+    border-left: 4px solid var(--yellow);
+    border-radius: 0 6px 6px 0;
+    padding: 20px 20px 20px 24px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .fact-card:hover { transform: translateX(4px); }
+  .fact-card.red { border-left-color: var(--red); }
+  .fact-card.blue { border-left-color: #3B82F6; }
+  .fact-emoji { font-size: 28px; margin-bottom: 10px; }
+  .fact-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .fact-card p { font-size: 13px; color: var(--muted); }
+
+  /* ── PROGRESS READ ── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--yellow);
+    z-index: 999;
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  /* ── NEWSLETTER ── */
+  .newsletter {
+    background: linear-gradient(135deg, #111 0%, #1a1a00 100%);
+    border: 1px solid var(--yellow);
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    margin: 40px 0;
+  }
+  .newsletter h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--yellow);
+    margin-bottom: 8px;
+  }
+  .newsletter p { color: var(--muted); margin-bottom: 20px; }
+  .newsletter-form {
+    display: flex;
+    gap: 8px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .newsletter-form input {
+    flex: 1;
+    background: #000;
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .newsletter-form input:focus { border-color: var(--yellow); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #000;
+    border-top: 1px solid var(--border);
+    padding: 40px 24px 24px;
+    margin-top: 60px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .footer-col h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 4px 0;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    font-size: 12px;
+    color: #444;
+    text-align: center;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .featured-grid, .two-col { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    .cards-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .sidebar { display: none; }
+    .footer-inner { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .newsletter-form { flex-direction: column; }
+  }
+
+  /* BG colors for placeholder images */
+  .bg1 { background: linear-gradient(135deg, #1a0a2e, #2d1a4e); }
+  .bg2 { background: linear-gradient(135deg, #0a1628, #1a3050); }
+  .bg3 { background: linear-gradient(135deg, #1a0a0a, #3d1010); }
+  .bg4 { background: linear-gradient(135deg, #0a1a0a, #103010); }
+  .bg5 { background: linear-gradient(135deg, #1a1000, #3d2d00); }
+  .bg6 { background: linear-gradient(135deg, #001a1a, #003030); }
+  .bg7 { background: linear-gradient(135deg, #1a0010, #3d0030); }
+  .bg8 { background: linear-gradient(135deg, #00101a, #003040); }
+  .bg9 { background: linear-gradient(135deg, #0a0a0a, #252525); }
+  .bg10 { background: linear-gradient(135deg, #1a0a1a, #350a35); }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">🔥 MÁS DE 2 MILLONES DE LECTORES YA TUVIERON SU MENTE VOLADA HOY — ¿Y TÚ?</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">MENTE<span>ABIERTA</span></a>
+  <ul class="nav-links">
+    <li><a href="#">Ciencia</a></li>
+    <li><a href="#">Historia</a></li>
+    <li><a href="#">Espacio</a></li>
+    <li><a href="#">Psicología</a></li>
+    <li><a href="#">Listas</a></li>
+    <li><a href="#">Quizzes</a></li>
+  </ul>
+</nav>
+
+<!-- AD LEADERBOARD -->
+<div class="ad-wrapper">
+  <div>
+    <div class="ad-banner">[ ANUNCIO LEADERBOARD 728×90 ]</div>
+    <div class="ad-label">Publicidad</div>
+  </div>
+</div>
+
+<!-- HERO SECTION -->
+<div class="hero">
+  <div class="hero-eyebrow">El sitio donde aprender es adictivo</div>
+  <h1>Lo que no sabías<br><em>cambia todo.</em></h1>
+  <p class="hero-sub">Datos reales, historias increíbles y descubrimientos que te van a hacer decir "¿EN SERIO?"</p>
+  <div class="counter-block">
+    <div class="counter-dot"></div>
+    <div class="counter-num" id="counterNum">1,847,293</div>
+    <div class="counter-text">mentes sorprendidas hoy</div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner">
+    <span>Tu cerebro genera suficiente electricidad para encender una bombilla LED</span>
+    <span>El océano Pacífico tiene más área que todos los continentes juntos</span>
+    <span>Cleopatra vivió más cerca de nosotros que de la construcción de las pirámides</span>
+    <span>Los pulpos tienen tres corazones y sangre azul</span>
+    <span>El sonido viaja 4 veces más rápido bajo el agua que en el aire</span>
+    <span>El cerebro humano consume 20% de la energía del cuerpo</span>
+    <span>Hay más árboles en la Tierra que estrellas en la Vía Láctea</span>
+    <span>Tu cerebro genera suficiente electricidad para encender una bombilla LED</span>
+    <span>El océano Pacífico tiene más área que todos los continentes juntos</span>
+    <span>Cleopatra vivió más cerca de nosotros que de la construcción de las pirámides</span>
+    <span>Los pulpos tienen tres corazones y sangre azul</span>
+    <span>El sonido viaja 4 veces más rápido bajo el agua que en el aire</span>
+    <span>El cerebro humano consume 20% de la energía del cuerpo</span>
+    <span>Hay más árboles en la Tierra que estrellas en la Vía Láctea</span>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+  <div class="two-col">
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- SECTION: TRENDING -->
+      <div class="section-title">🔥 LO MÁS VIRAL AHORA</div>
+
+      <!-- SHARE BAR -->
+      <div class="share-bar">
+        <button class="share-btn share-fb">👍 Compartir</button>
+        <button class="share-btn share-tw">𝕏 Twitter</button>
+        <button class="share-btn share-wa">💬 WhatsApp</button>
+        <span class="share-count">38,241 compartidos hoy</span>
+      </div>
+
+      <!-- FEATURED GRID -->
+      <div class="featured-grid">
+        <div class="card card--featured">
+          <div class="card-img-placeholder bg1">🧠</div>
+          <div class="card-overlay">
+            <div class="card-tag">Neurociencia</div>
+            <div class="card-title">Tu cerebro tarda 80 milisegundos en percibir el presente — vives literalmente en el pasado</div>
+            <div class="card-meta">⏱ 4 min lectura &nbsp;•&nbsp; 👁 1.2M vistas</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card" style="flex:1;">
+            <div class="card-img-placeholder bg2" style="aspect-ratio:4/3;">🌊</div>
+            <div class="card-overlay">
+              <div class="card-tag red">IMPACTANTE</div>
+              <div class="card-title">El 95% del océano nunca ha sido explorado por humanos</div>
+              <div class="card-meta">⏱ 3 min &nbsp;•&nbsp; 👁 890K</div>
+            </div>
+          </div>
+          <div class="card" style="flex:1;">
+            <div class="card-img-placeholder bg3" style="aspect-ratio:4/3;">🌌</div>
+            <div class="card-overlay">
+              <div class="card-tag blue">Espacio</div>
+              <div class="card-title">Hay más estrellas en el universo que granos de arena en la Tierra</div>
+              <div class="card-meta">⏱ 2 min &nbsp;•&nbsp; 👁 2.1M</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AD IN CONTENT -->
+      <div style="margin: 8px 0;">
+        <div class="ad-banner" style="max-width:100%; height:100px;">[ ANUNCIO IN-CONTENT 970×90 ]</div>
+        <div class="ad-label">Publicidad</div>
+      </div>
+
+      <!-- CARDS GRID -->
+      <div class="section-title">🧪 CIENCIA QUE NO ENSEÑAN EN EL COLEGIO</div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-img-placeholder bg4">🐙</div>
+          <div class="card-overlay">
+            <div class="card-tag green">Biología</div>
+            <div class="card-title">Los pulpos pueden ver colores a pesar de ser daltónicos</div>
+            <div class="card-meta">⏱ 3 min &nbsp;•&nbsp; 👁 670K</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img-placeholder bg5">⚡</div>
+          <div class="card-overlay">
+            <div class="card-tag">Física</div>
+            <div class="card-title">El rayo cae hasta 100 veces por segundo en todo el planeta</div>
+            <div class="card-meta">⏱ 2 min &nbsp;•&nbsp; 👁 445K</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img-placeholder bg6">🦠</div>
+          <div class="card-overlay">
+            <div class="card-tag red">Impactante</div>
+            <div class="card-title">En tu cuerpo hay 10 veces más bacterias que células humanas</div>
+            <div class="card-meta">⏱ 4 min &nbsp;•&nbsp; 👁 1.8M</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOP 10 LIST -->
+      <div class="section-title">📋 TOP 10: DATOS QUE NADIE TE CREE</div>
+      <div id="top10List">
+        <div class="list-card">
+          <div class="list-number">01</div>
+          <div class="list-content">
+            <h3>Oxford University es más antigua que el Imperio Azteca</h3>
+            <p>Fundada en 1096, casi 400 años antes de que los aztecas construyeran Tenochtitlán.</p>
+          </div>
+        </div>
+        <div class="list-card">
+          <div class="list-number">02</div>
+          <div class="list-content">
+            <h3>Cleopatra vivió más cerca de nosotros que de las pirámides</h3>
+            <p>Hay 2,500 años entre las pirámides y Cleopatra, pero solo 2,000 entre ella y nosotros.</p>
+          </div>
+        </div>
+        <div class="list-card">
+          <div class="list-number">03</div>
+          <div class="list-content">
+            <h3>Un día en Venus dura más que un año en Venus</h3>
+            <p>Venus tarda 243 días terrestres en girar sobre sí mismo, pero solo 225 en orbitar el Sol.</p>
+          </div>
+        </div>
+        <div class="list-card">
+          <div class="list-number">04</div>
+          <div class="list-content">
+            <h3>El corazón de una ballena azul late solo 2 veces por minuto</h3>
+            <p>Y es tan grande que un humano adulto podría gatear por sus arterias.</p>
+          </div>
+        </div>
+        <div class="list-card">
+          <div class="list-number">05</div>
+          <div class="list-content">
+            <h3>Hay más combinaciones posibles en una baraja que átomos en la Tierra</h3>
+            <p>52! combinaciones = un número con 67 dígitos. Nadie ha visto el mismo orden dos veces.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AD IN-CONTENT 2 -->
+      <div style="margin: 24px 0 8px;">
+        <div class="ad-banner" style="max-width:100%; height:250px;">[ ANUNCIO RECTANGLE 300×250 ]</div>
+        <div class="ad-label">Publicidad</div>
+      </div>
+
+      <!-- QUIZ CARD -->
+      <div class="quiz-card">
+        <div class="quiz-icon">🎯</div>
+        <h3>¿Cuánto sabes realmente sobre el universo?</h3>
+        <p>Solo el 12% de la gente pasa este quiz. ¿Eres parte de ese grupo?</p>
+        <button class="btn">EMPEZAR QUIZ GRATIS →</button>
+      </div>
+
+      <!-- HISTORY SECTION -->
+      <div class="section-title">🏛️ HISTORIA QUE TE VA A CAMBIAR LA PERSPECTIVA</div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-img-placeholder bg7">🗡️</div>
+          <div class="card-overlay">
+            <div class="card-tag red">Historia</div>
+            <div class="card-title">Los vikingos llegaron a América 500 años antes que Colón</div>
+            <div class="card-meta">⏱ 5 min &nbsp;•&nbsp; 👁 930K</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img-placeholder bg8">📜</div>
+          <div class="card-overlay">
+            <div class="card-tag blue">Dato</div>
+            <div class="card-title">El Imperio Romano duró más de 1,000 años (si cuentas Bizancio)</div>
+            <div class="card-meta">⏱ 3 min &nbsp;•&nbsp; 👁 780K</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img-placeholder bg9">🔮</div>
+          <div class="card-overlay">
+            <div class="card-tag green">Mente</div>
+            <div class="card-title">Newton inventó el cálculo para calcular la órbita de la Luna</div>
+            <div class="card-meta">⏱ 4 min &nbsp;•&nbsp; 👁 560K</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MINI FACTS -->
+      <div class="section-title">⚡ DATOS RÁPIDOS: 30 SEGUNDOS</div>
+      <div class="cards-grid">
+        <div class="fact-card">
+          <div class="fact-emoji">🧊</div>
+          <h3>El agua caliente se congela más rápido que el agua fría</h3>
+          <p>Se llama el efecto Mpemba. Los científicos aún debaten por qué sucede.</p>
+        </div>
+        <div class="fact-card red">
+          <div class="fact-emoji">🫀</div>
+          <h3>Tu corazón bombea 7,600 litros de sangre cada día</h3>
+          <p>Suficiente para llenar más de 40 bañeras. Sin parar. Toda tu vida.</p>
+        </div>
+        <div class="fact-card blue">
+          <div class="fact-emoji">🐜</div>
+          <h3>Las hormigas pesan colectivamente lo mismo que todos los humanos</h3>
+          <p>Se estima que hay 20 cuatrillones de hormigas en la Tierra.</p>
+        </div>
+      </div>
+
+      <!-- AD FOOTER CONTENT -->
+      <div style="margin: 24px 0 8px;">
+        <div class="ad-banner" style="max-width:100%; height:90px;">[ ANUNCIO FOOTER CONTENT 728×90 ]</div>
+        <div class="ad-label">Publicidad</div>
+      </div>
+
+      <!-- PSYCHOLOGY SECTION -->
+      <div class="section-title">🧠 PSICOLOGÍA: CÓMO FUNCIONA TU MENTE</div>
+      <div class="cards-grid-4 cards-grid">
+        <div class="card">
+          <div class="card-img-placeholder bg10" style="aspect-ratio:1;">🪞</div>
+          <div class="card-overlay">
+            <div class="card-tag">Psicología</div>
+            <div class="card-title">Por qué nunca te ves igual en el espejo que en fotos</div>
+            <div class="card-meta">⏱ 3 min</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img-placeholder bg1" style="aspect-ratio:1;">😴</div>
+          <div class="card-overlay">
+            <div class="card-tag red">Sueños</div>
+            <div class="card-title">Por qué olvidas el 90% de tus sueños en 10 minutos</div>
+            <div class="card-meta">⏱ 2 min</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img-placeholder bg2" style="aspect-ratio:1;">🎵</div>
+          <div class="card-overlay">
+            <div class="card-tag blue">Música</div>
+            <div class="card-title">La ciencia explica por qué una canción se te pega en la cabeza</div>
+            <div class="card-meta">⏱ 4 min</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img-placeholder bg3" style="aspect-ratio:1;">👁️</div>
+          <div class="card-overlay">
+            <div class="card-tag green">Percepción</div>
+            <div class="card-title">Tu visión periférica es casi completamente inventada por tu cerebro</div>
+            <div class="card-meta">⏱ 3 min</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEWSLETTER -->
+      <div class="newsletter">
+        <h2>📩 DATOS INCREÍBLES CADA DÍA</h2>
+        <p>Únete a 2 millones de personas que empiezan el día con su mente volada.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="tu@email.com">
+          <button class="btn">SUSCRIBIRME</button>
+        </div>
+      </div>
+
+    </div><!-- /left col -->
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="ad-sidebar">[ ANUNCIO 300×250 ]</div>
+      <div class="ad-label" style="text-align:center;margin-bottom:20px;">Publicidad</div>
+
+      <!-- TRENDING SIDEBAR -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:20px;margin-bottom:16px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--yellow);margin-bottom:16px;letter-spacing:1px;">🔥 MÁS LEÍDOS</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;padding-bottom:12px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow);min-width:30px;">1</span>
+            <p style="font-size:13px;font-weight:600;color:var(--white);">Los dinosaurios existieron durante más tiempo del que llevan extintos</p>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;padding-bottom:12px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow);min-width:30px;">2</span>
+            <p style="font-size:13px;font-weight:600;color:var(--white);">Hay un lago debajo del océano Ártico con agua 5 veces más salada</p>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;padding-bottom:12px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow);min-width:30px;">3</span>
+            <p style="font-size:13px;font-weight:600;color:var(--white);">El tiempo literalmente pasa más rápido si estás más alto sobre el nivel del mar</p>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;padding-bottom:12px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow);min-width:30px;">4</span>
+            <p style="font-size:13px;font-weight:600;color:var(--white);">El ser humano es el único animal que se ruboriza voluntariamente</p>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;">
+            <span style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow);min-width:30px;">5</span>
+            <p style="font-size:13px;font-weight:600;color:var(--white);">Hay un color que tu cerebro no puede ver: el "reddish-green" es imposible</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ad-sidebar ad-sidebar-tall">[ ANUNCIO SKYSCRAPER 300×600 ]</div>
+      <div class="ad-label" style="text-align:center;margin-bottom:20px;">Publicidad</div>
+
+      <!-- QUIZ MINI -->
+      <div class="quiz-card" style="margin-bottom:16px;">
+        <div class="quiz-icon">🧩</div>
+        <h3>DATO DEL DÍA</h3>
+        <p style="font-size:13px;">¿Cuántas veces late tu corazón en toda tu vida?</p>
+        <button class="btn btn-red" style="font-size:12px;">VER RESPUESTA</button>
+      </div>
+
+      <div class="ad-sidebar">[ ANUNCIO 300×250 ]</div>
+      <div class="ad-label" style="text-align:center;">Publicidad</div>
+    </div>
+  </div><!-- /two-col -->
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>MENTEABIERTA</h4>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">El sitio donde aprender es tan adictivo como las redes sociales. Curiosidades verificadas cada día.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Categorías</h4>
+      <a href="#">Ciencia y Tecnología</a>
+      <a href="#">Historia y Cultura</a>
+      <a href="#">Espacio y Astronomía</a>
+      <a href="#">Psicología y Mente</a>
+      <a href="#">Naturaleza y Animales</a>
+      <a href="#">Top 10 y Listas</a>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <a href="#">Sobre nosotros</a>
+      <a href="#">Anúnciate aquí</a>
+      <a href="#">Política de privacidad</a>
+      <a href="#">Contacto</a>
+      <a href="#">Newsletter</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2024 MenteAbierta. Hecho con curiosidad y café. | <a href="#" style="color:#555;">Política de cookies</a>
+  </div>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const scrollTop = window.scrollY || doc.scrollTop;
+    const scrollHeight = doc.scrollHeight - doc.clientHeight;
+    const pct = (scrollTop / scrollHeight) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+  });
+
+  // Animated counter
+  let base = 1847293;
+  const el = document.getElementById('counterNum');
+  setInterval(() => {
+    base += Math.floor(Math.random() * 5) + 1;
+    el.textContent = base.toLocaleString('es-ES');
+  }, 2000);
+
+  // Duplicate ticker content for seamless loop
+  const ti = document.getElementById('tickerInner');
+  ti.innerHTML += ti.innerHTML;
+</script>
+</body>
+</html>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7205581121696396"
+     crossorigin="anonymous"></script>
